@@ -1,10 +1,20 @@
 pipeline {
     agent any
+    
+    tools {
+        nodejs 'nodejs'  // Replace 'nodejs' with the name you specified in the Jenkins Global Tool Configuration
+    }
 
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/sprasadpujari/full-stack-web-app-jenkins.git'
+            }
+        }
+
+        stage('Install') {
+            steps {
+                sh "npm install"
             }
         }
 
