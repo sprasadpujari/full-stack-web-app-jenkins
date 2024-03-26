@@ -6,14 +6,7 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/sprasadpujari/full-stack-web-app-jenkins.git'
             }
         }
-
-        stage('Install') {
-            steps {
-                sh "npm install"
-            }
-        }
-
-        stage('Build') {
+         stage('Build') {
             parallel {
                 stage('Build React') {
                     steps {
