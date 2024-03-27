@@ -15,9 +15,7 @@
              steps{
                  withCredentials([usernamePassword(credentialsId: 'my-docker-registry-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-                    sh 'docker push react-app:${BUILD_NUMBER}'
-                    sh 'docker push node-app:${BUILD_NUMBER}'
-                    sh 'docker push mysql-db:${BUILD_NUMBER}'
+                    sh "docker push sprasadpujari/full-stack-new:latest"
                  }
              }
          }
