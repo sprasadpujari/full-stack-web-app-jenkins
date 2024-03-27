@@ -1,11 +1,7 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'nodejs'
-    }
-
-    environment {
+       environment {
         DOCKER_CREDENTIALS = credentials('my-docker-registry-credentials')
     }
 
