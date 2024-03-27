@@ -13,13 +13,11 @@
          }
          stage("Push to Docker Hub"){
              steps{
-             withCredentials([usernamePassword(credentialsId: 'my-docker-registry-credentials', usernameVariable: 'DOCKER_HUB_USER', passwordVariable: 'DOCKER_HUB_PASSWORD')]) 
-		           {
-			          sh "echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin"
-			          }
-            	  sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-               sh "docker push sprasadpujari/full-stack-new:latest"
-                
+                 withCredentials([usernamePassword(credentialsId: 'my-docker-registry-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+                    sh 'docker push react-app:${BUILD_NUMBER}'
+                    sh 'docker push node-app:${BUILD_NUMBER}'
+                    sh 'docker push mysql-db:${BUILD_NUMBER}'
                  }
              }
          }
