@@ -3,8 +3,8 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps {
-                checkout scm
+             steps {
+                git branch: 'main', url: 'https://github.com/sprasadpujari/full-stack-web-app-jenkins.git'
             }
         }
 
