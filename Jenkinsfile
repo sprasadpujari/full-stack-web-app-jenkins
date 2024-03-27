@@ -8,14 +8,15 @@
          }
          stage("Build and Test"){
              steps{
-                 sh "docker build . -t sprasadpujari/full-stack-new:latest"
+                 sh "docker build . -t full-stack-app"
              }
          }
          stage("Push to Docker Hub"){
              steps{
                  withCredentials([usernamePassword(credentialsId: 'my-docker-registry-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-                    sh "docker push sprasadpujari/full-stack-new:latest"
+                    sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                    sh "docker tag full-stack-app $DOCKER_USERNAME/full-stack-app:latest"
+                    sh "docker push $DOCKER_USERNAME/full-stack-app:latest"
                  }
              }
          }
