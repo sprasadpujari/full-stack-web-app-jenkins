@@ -13,7 +13,10 @@
          }
          stage("Push to Docker Hub"){
              steps{
-               withCredentials([usernamePassword(credentialsId :'my-docker-registry-credentials',passwordVariable:'dockerHubPassword',usernameVariable: 'dockerHubUser')]) {
+             withCredentials([usernamePassword(credentialsId: 'my-docker-registry-credentials', usernameVariable: 'DOCKER_HUB_USER', passwordVariable: 'DOCKER_HUB_PASSWORD')]) 
+		           {
+			          sh "echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin"
+			          }
             	  sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
                sh "docker push sprasadpujari/full-stack-new:latest"
                 
