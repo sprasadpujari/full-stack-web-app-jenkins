@@ -13,10 +13,9 @@ pipeline {
                 stage('Build React') {
                     steps {
                         dir('frontend') {
-                            sh 'npm cache clean --force'
-                            sh 'rm -rf node_modules'
-                            sh 'npm install'
-                            sh 'npm run build'
+                            sh 'npm init -y'
+                            sh 'npm install react react-dom'
+                            
                         }
                     }
                 }
@@ -24,10 +23,10 @@ pipeline {
                 stage('Build Node.js') {
                     steps {
                         dir('backend') {
-                            sh 'npm cache clean --force'
-                            sh 'rm -rf node_modules'
-                            sh 'npm install'
-                            sh 'npm run build'
+
+                            sh 'npm init -y'
+                            sh 'npm install express mongoose'
+                           
                         }
                     }
                 }
@@ -39,9 +38,6 @@ pipeline {
                 stage('Test React') {
                     steps {
                         dir('frontend') {
-                            sh 'npm cache clean --force'
-                            sh 'rm -rf node_modules'
-                            sh 'npm install'
                             sh 'npm test'
                         }
                     }
@@ -50,10 +46,7 @@ pipeline {
                 stage('Test Node.js') {
                     steps {
                         dir('backend') {
-                            sh 'npm cache clean --force'
-                            sh 'rm -rf node_modules'
-                            sh 'npm install'
-                            sh 'npm test'
+                          sh 'npm test'
                         }
                     }
                 }
