@@ -1,88 +1,32 @@
-pipeline {
+ pipeline {
     agent any
-
-    stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/sprasadpujari/full-stack-web-app-jenkins.git'
-            }
-        }
-
-        stage('Build') {
-            parallel {
-                stage('Build React') {
-                    steps {
-                        dir('frontend') {
-                            sh 'npm init -y'
-                            sh 'npm install react react-dom'
-                            
-                        }
-                    }
-                }
-
-                stage('Build Node.js') {
-                    steps {
-                        dir('backend') {
-
-                            sh 'npm init -y'
-                            sh 'npm install express mongoose'
-                           
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Test') {
-            parallel {
-                stage('Test React') {
-                    steps {
-                        dir('frontend') {
-                            sh 'npm test'
-                        }
-                    }
-                }
-
-                stage('Test Node.js') {
-                    steps {
-                        dir('backend') {
-                          sh 'npm test'
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Docker Build') {
-            steps {
-                dir('frontend') {
-                    sh 'docker build -t react-app:${BUILD_NUMBER} .'
-                }
-                dir('backend') {
-                    sh 'docker build -t node-app:${BUILD_NUMBER} .'
-                }
-                sh 'docker build -t mysql-db:${BUILD_NUMBER} ./database'
-            }
-        }
-
-        stage('Docker Push') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
-                    sh 'docker push react-app:${BUILD_NUMBER}'
-                    sh 'docker push node-app:${BUILD_NUMBER}'
-                    sh 'docker push mysql-db:${BUILD_NUMBER}'
-                }
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                sshagent(['deploy-server-credentials']) {
-                    sh 'ssh user@remote-server "docker-compose -f /path/to/docker-compose.yml pull"'
-                    sh 'ssh user@remote-server "docker-compose -f /path/to/docker-compose.yml up -d"'
-                }
-            }
-        }
-    }
-}
+    environment {     
+    DOCKERHUB_CREDENTIALS= credentials('dockerhubcredentials')     
+     } 
+     stages{
+         stage("Clone Code"){
+             steps{
+                 git url: "https://github.com/sprasadpujari/full-stack-web-app-jenkins.git", branch: "main"
+             }
+         }
+         stage("Build and Test"){
+             steps{
+                 sh "docker build . -t sprasadpujari/full-stack-new:latest"
+             }
+         }
+         stage("Push to Docker Hub"){
+             steps{
+               withCredentials([usernamePassword(credentialsId :'dockerHub',passwordVariable:'dockerHubPassword',usernameVariable: 'dockerHubUser')]) {
+            	sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+                sh "docker push sprasadpujari/full-stack-new:latest"
+                
+                 }
+             }
+         }
+         stage("Deploy"){
+             steps{
+                 sh "docker-compose down && docker-compose up -d"
+             }
+         }
+     }
+ }
