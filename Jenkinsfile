@@ -1,9 +1,6 @@
  pipeline {
     agent any
-    environment {     
-    DOCKERHUB_CREDENTIALS= credentials('dockerhubcredentials')     
-     } 
-     stages{
+      stages{
          stage("Clone Code"){
              steps{
                  git url: "https://github.com/sprasadpujari/full-stack-web-app-jenkins.git", branch: "main"
@@ -16,9 +13,9 @@
          }
          stage("Push to Docker Hub"){
              steps{
-               withCredentials([usernamePassword(credentialsId :'dockerHub',passwordVariable:'dockerHubPassword',usernameVariable: 'dockerHubUser')]) {
-            	sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
-                sh "docker push sprasadpujari/full-stack-new:latest"
+               withCredentials([usernamePassword(credentialsId :'my-docker-registry-credentials',passwordVariable:'dockerHubPassword',usernameVariable: 'dockerHubUser')]) {
+            	  sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+               sh "docker push sprasadpujari/full-stack-new:latest"
                 
                  }
              }
