@@ -1,24 +1,31 @@
 pipeline {
     agent any
-     stages {
+
+    stages {
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/sprasadpujari/full-stack-web-app-jenkins.git'
             }
         }
-         stage('Build') {
+
+        stage('Build') {
             parallel {
                 stage('Build React') {
                     steps {
                         dir('frontend') {
+                            sh 'npm cache clean --force'
+                            sh 'rm -rf node_modules'
                             sh 'npm install'
                             sh 'npm run build'
                         }
                     }
                 }
+
                 stage('Build Node.js') {
                     steps {
                         dir('backend') {
+                            sh 'npm cache clean --force'
+                            sh 'rm -rf node_modules'
                             sh 'npm install'
                             sh 'npm run build'
                         }
@@ -32,14 +39,19 @@ pipeline {
                 stage('Test React') {
                     steps {
                         dir('frontend') {
+                            sh 'npm cache clean --force'
+                            sh 'rm -rf node_modules'
                             sh 'npm install'
                             sh 'npm test'
                         }
                     }
                 }
+
                 stage('Test Node.js') {
                     steps {
                         dir('backend') {
+                            sh 'npm cache clean --force'
+                            sh 'rm -rf node_modules'
                             sh 'npm install'
                             sh 'npm test'
                         }
