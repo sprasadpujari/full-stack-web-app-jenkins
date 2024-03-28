@@ -1,6 +1,12 @@
  pipeline {
     agent any
       stages{
+       stage('Install Dependencies') {
+            steps {
+                nodeWithProfiles('npm') {
+                    sh 'npm install'
+                }
+            }       
          stage("Clone Code"){
              steps{
                  git url: "https://github.com/sprasadpujari/full-stack-web-app-jenkins.git", branch: "main"
