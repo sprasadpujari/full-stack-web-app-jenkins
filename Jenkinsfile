@@ -22,7 +22,8 @@
          }
          stage("Deploy"){
              steps{
-                 sh "docker-compose up -d"
+                sh "docker-compose pull"
+                sh "docker-compose up -d --build --remove-orphans --force-recreate"                
              }
          }
      }
